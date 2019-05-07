@@ -50,6 +50,7 @@ def money(bot, update):
     return QUESTION
 
 def skip_money(bot, update):
+    reply_keyboard = [['Yes', 'No']]
     user = update.message.from_user
     logger.info("User %s did not send a budget.", user.first_name)
     update.message.reply_text(
@@ -77,7 +78,7 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
-    updater = Updater(“TOKEN”)
+    updater = Updater("838044716:AAF0QZnjqlJNmvU70KrIpqCfkhJ5Y2ADdoQ")
     dp = updater.dispatcher
 
     conv_handler = ConversationHandler(
@@ -86,9 +87,11 @@ def main():
         states={
             CONTACT: [MessageHandler(Filters.text, contact)],
 
-            TASK: [MessageHandler(Filters.text, task)],
+            TASK: [MessageHandler(Filters.text, task),
+                   CommandHandler('skip', skip_money)],
 
-            MONEY: [MessageHandler(Filters.text, money)],
+            MONEY: [MessageHandler(Filters.text, money),
+                    CommandHandler('skip', skip_money)],
 
             QUESTION: [RegexHandler('^(Yes|No)$', question)]
 
